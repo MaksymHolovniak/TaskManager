@@ -1,10 +1,20 @@
-const express = require('express');
+import express from 'express';
+import connectDb from './config/db.js';
+import { config } from './config/config.js';
+import authRouter from './routes/authRoutes.js';
 
 const app = express();
-const port = 3000;
+const { port } = config;
 
 app.use(express.json());
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port} and starting at http://localhost:${port}`);
-});
+app.use('/api', authRouter);
+
+const startServer = async () => {
+  await connectDb();
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port} and starting at http://localhost:${port}`);
+  });
+};
+
+startServer();
